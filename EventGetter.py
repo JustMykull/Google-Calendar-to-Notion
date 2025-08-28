@@ -40,7 +40,7 @@ def getEvents():
 
         now = dt.datetime.now().isoformat() + "Z"
 
-        event_results = service.events().list(calendarId="jsohl8n7avebbk541d3r4811h2eoq6fe@import.calendar.google.com", timeMin=now, maxResults=10, singleEvents=True, orderBy="startTime").execute()
+        event_results = service.events().list(calendarId="calendarID", timeMin=now, maxResults=10, singleEvents=True, orderBy="startTime").execute()
         events = event_results.get("items", [])
 
         if not events:
@@ -78,5 +78,6 @@ def getEvents():
         
     except HttpError as error:
         print("Error Occured: ", error)
+
 
 getEvents()
