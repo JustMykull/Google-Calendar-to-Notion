@@ -1,7 +1,7 @@
 from notion_client import Client
 
-client = Client(auth="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")
-dbID = "25a33e98aa5881d7a875f3813844bb2e"
+client = Client(auth="SECRET")
+dbID = "database id"
 
 def getAssignments(databaseID):
     try:
@@ -53,4 +53,5 @@ def createAssignment(databaseID, assignmentName, courseCode, Deadline, EventID):
 
     except Exception as error:
         print(error)
+
 
