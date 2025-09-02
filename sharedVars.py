@@ -4,6 +4,7 @@ DEADLINE = []
 EVENTID = []
 
 ExistingEventID = []
+ExistingAssignmentNames = []
 
 EVENTS = []
 
@@ -16,6 +17,3 @@ def formatEvents():
             "Deadline" : DEADLINE.pop(0),
             "EventID" : id
         })
-
-        # print(EVENTS)
-
