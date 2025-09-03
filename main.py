@@ -1,5 +1,3 @@
-import NotionAPI
-import EventGetter
 import sharedVars
 import traceback
 import re
@@ -7,7 +5,11 @@ import re
 from datetime import datetime
 import pytz 
 
+import discordIntegration
+import NotionAPI
+import EventGetter
 # PLEASE WORK PLEASE WORK PLEASE WORK PLEASE NO DUPES
+
 
 def normalize(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip().lower()
@@ -31,6 +33,8 @@ def to_eastern(utc_str: str) -> str:
         return utc_str  # fallback if parsing fails
 
 def EventsToNotion():
+    l = open("cronRuns.log", "w")
+
     try:
         #Gets events from Google Calendar
         EventGetter.getEvents()
@@ -61,11 +65,12 @@ def EventsToNotion():
             deadline = event.get("Deadline", "")
 
             key = "".join(make_key(normalize(event_id), normalize(name), normalize(deadline)))
-            print("Key: ")
+            print("Key:", end=" ")
             print(key)
 
             if key in existing_keys:
                 print(f"Skipping duplicate: {name} ({key}, {deadline}) \n")
+                print(f"Skipping duplicate: {name} ({key}, {deadline}) \n", file=l)
                 sharedVars.EVENTS.remove(event)
                 continue
             
@@ -81,13 +86,23 @@ def EventsToNotion():
             )
 
             print(f"Created new assignment: {name} ({key}, {deadline}) \n")
+            print(f"Created new assignment: {name} ({key}, {deadline}) \n", file=l)
+            
 
             # Update keys set so no dupes within same run
             existing_keys.add(key)
             sharedVars.EVENTS.remove(event)
 
+            l.close()
+
     except Exception as error:
         print("Error caught:", str(error))
+        traceback.print_exc()
+
+    try: 
+        discordIntegration.runBot()
+    except Exception as error:
+        print(error)
         traceback.print_exc()
 
 EventsToNotion()
